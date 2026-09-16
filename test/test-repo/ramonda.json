@@ -1,0 +1,17 @@
+{
+  "baseBranch": "main",
+  "project": {
+    "owner": "",
+    "number": 0
+  },
+  "worktree": {
+    "filesToCopy": [],
+    "prepare": []
+  },
+  "verify": [
+    {
+      "command": "node test",
+      "timeout": 60000
+    }
+  ]
+}

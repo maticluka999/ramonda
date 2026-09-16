@@ -1,0 +1,8 @@
+node_modules/
+
+# ramonda
+.claude/AGENT_TASK.md
+.claude/ramonda-task.json
+.claude/ramonda-task.json.*
+.claude/settings.local.json
+.worktrees/

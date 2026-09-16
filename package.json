@@ -1,0 +1,67 @@
+{
+  "name": "ramonda",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Drive Claude Code coding sessions from a Github project.",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "github-projects",
+    "autonomous-agent",
+    "automation",
+    "cli"
+  ],
+  "homepage": "https://github.com/maticluka999/ramonda#readme",
+  "bugs": {
+    "url": "https://github.com/maticluka999/ramonda/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maticluka999/ramonda.git"
+  },
+  "license": "MIT",
+  "author": "Luka Matic (https://github.com/maticluka999)",
+  "type": "module",
+  "bin": {
+    "ramonda": "./dist/entrypoints/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p . && chmod +x dist/entrypoints/cli.js",
+    "clean": "rm -rf dist",
+    "dev": "tsc -p . --watch",
+    "typecheck": "tsc -p . --noEmit",
+    "logo": "node scripts/render-logo.mjs",
+    "pretest": "npm run build",
+    "test": "vitest run --passWithNoTests --exclude '**/node_modules/**' --exclude 'test/e2e/**'",
+    "test:e2e": "vitest run test/e2e --reporter=basic",
+    "format": "npx prettier . --write",
+    "format:check": "npx prettier . --check"
+  },
+  "dependencies": {
+    "@inquirer/core": "^12.0.3",
+    "@inquirer/prompts": "^8.5.2",
+    "@octokit/plugin-retry": "^8.1.0",
+    "@octokit/rest": "^21.0.2",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "execa": "^9.5.2",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "prettier": "^3.9.6",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=20.17"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ]
+}

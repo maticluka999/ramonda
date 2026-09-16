@@ -1,0 +1,299 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 312" width="880" height="312" role="img" aria-labelledby="flow-title flow-desc">
+  <title id="flow-title">How ramonda works</title>
+  <desc id="flow-desc">A task travels a loop: you write an issue; the Github project queues it as Todo; ramonda on your machine claims the task and runs a Claude Code session; it then verifies, commits, pushes and creates a pull request; the project item moves to Ready for review and the pull request comes back to you, where merging it moves the item on to Ready for test.</desc>
+
+  <defs>
+    <linearGradient id="task" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8B7BE8"/>
+      <stop offset="1" stop-color="#5B47C2"/>
+    </linearGradient>
+    <linearGradient id="pr" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3FB863"/>
+      <stop offset="1" stop-color="#1A7F37"/>
+    </linearGradient>
+    <!--
+      userSpaceOnUse so the head is a fixed 10px rather than a multiple of the
+      line's stroke width — the return path and the three hops share one marker
+      and would otherwise draw it at two sizes.
+    -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M 0 0 L 9 5 L 0 10 Z" fill="#B8AFDD"/>
+    </marker>
+  </defs>
+
+  <!--
+    One 8.4-second loop, replayed forever. As in the logo, no part carries an
+    `animation-delay`: a delay applies to the first iteration only, so it would
+    stagger the opening pass and then leave every part restarting on its own
+    offset — the task leaving the project while the box it just left is still
+    lit from the cycle before. The stagger lives in the keyframe percentages
+    instead, so everything shares one cycle boundary and the whole diagram
+    resets on a single beat.
+
+    The three short hops share one speed, 133px per second, so a card between
+    two boxes always moves the same way wherever in the row it is. The return
+    is the one leg that does not: at 660px it is 8.25 times the journey, and
+    holding it to the same speed would spend most of the loop watching a card
+    cross an empty strip. It runs at 275px per second instead — still visibly
+    the long way round, at 2.4s against 0.6s, but no longer the thing the
+    diagram is mostly doing.
+
+    The dwells are equal, at 0.8s, even though the machine is where the real
+    minutes of a task go: a box that holds the eye longer than its neighbours
+    reads as the diagram having stalled there rather than as the work being
+    slower there, and how long a session takes is not something this drawing
+    is trying to say.
+
+    `you` is dwelt on twice, at both ends of the loop, and that is what lets the
+    diagram open on an empty board. No *status* may be lit at 0%, or the first
+    thing a reader ever sees is a finished state nothing has earned yet — but 0%
+    and 100% are the same instant, so a row still lit when the pull request gets
+    home would be lit at the start too. So the arrival is given a dwell of its
+    own, and the 0.2s after it is a beat where the board clears.
+
+    The box outline is the exception, and deliberately: `you` stays lit straight
+    through that beat and out the other side, so its two dwells read as one
+    1.8s stretch rather than as the outline blinking off and back on. The board
+    behind it is what resets, not the person.
+
+    Every duration below is a multiple of 0.2s, so the loop divides into 42 of
+    them and one is 2.381% — which is why the percentages are given to two
+    places rather than landing round. The beats, as percentages of 8.4s:
+
+         0.00- 9.52  you             writes the issue; no status is lit
+         9.52-16.67  hop 1           you -> project, 80px in 0.6s
+        16.67-26.19  project         the item moves to Todo
+        26.19-33.33  hop 2           project -> machine, 80px, the claim
+        33.33-42.86  machine         the session and its verify; In progress
+        42.86-50.00  hop 3           machine -> pull request, 80px
+        50.00-59.52  pull request    opened; the item moves to Ready for review
+        59.52-88.10  hop 4           pull request -> you, 660px in 2.4s, the return
+        88.10-97.62  you             the merge; the item moves to Ready for test
+        97.62-100    reset           the board clears; `you` stays lit into 0.00
+
+    To retime, change every `8.4s` and rescale: 1s = 11.905% of 8.4s. The budget
+    is 5 dwells at 4 units, 3 short hops at 3, the return at 12 and the dark
+    beat at 1; anything taken from one has to come back out of the others.
+  -->
+  <style>
+    /* Travel is linear on purpose: a packet on a wire does not ease. Which also
+       means the opacity-only keyframes inside a hop cannot dent its speed —
+       transform interpolates straight across them. */
+    .tok { animation: 8.4s linear infinite both; }
+    .tok1 { animation-name: hop1; }
+    .tok2 { animation-name: hop2; }
+    .tok3 { animation-name: hop3; }
+    .tok4 { animation-name: hop4; }
+
+    .act { animation: 8.4s ease-in-out infinite both; }
+    .act1 { animation-name: lit1; }
+    .act2 { animation-name: lit2; }
+    .act3 { animation-name: lit3; }
+    .act4 { animation-name: lit4; }
+
+    /* The three status rows track where the task actually is, so the board in
+       the diagram says the same thing the board on Github would. */
+    .st { animation: 8.4s ease-in-out infinite both; }
+    .st1 { animation-name: todo; }
+    .st2 { animation-name: doing; }
+    .st3 { animation-name: review; }
+    .st4 { animation-name: test; }
+
+    /* Each hop: hold at the start, cross, hold at the end, and fade at both
+       ends so the card is never seen clipping into a box. The fades are a
+       fixed 1% rather than a share of the hop — they cover the box edge,
+       which is the same width whatever the hop's length. */
+    @keyframes hop1 { 0%,  9.52% { transform: translateX(0); opacity: 0; } 10.52% { opacity: 1; } 15.67% { opacity: 1; } 16.67%, 100% { transform: translateX(80px); opacity: 0; } }
+    @keyframes hop2 { 0%, 26.19% { transform: translateX(0); opacity: 0; } 27.19% { opacity: 1; } 32.33% { opacity: 1; } 33.33%, 100% { transform: translateX(80px); opacity: 0; } }
+    @keyframes hop3 { 0%, 42.86% { transform: translateX(0); opacity: 0; } 43.86% { opacity: 1; } 49.00% { opacity: 1; } 50.00%, 100% { transform: translateX(80px); opacity: 0; } }
+    @keyframes hop4 { 0%, 59.52% { transform: translateX(0); opacity: 0; } 60.52% { opacity: 1; } 87.10% { opacity: 1; } 88.10%, 100% { transform: translateX(-660px); opacity: 0; } }
+
+    /* `you` is the one box whose lit window wraps the seam: it comes on as the
+       pull request lands and stays on through the reset and out the far side,
+       because taking the pull request back and writing the next issue are the
+       same person doing two things in a row, and dropping the outline between
+       them would read as them leaving the room. Lit at both 0 and 100, so the
+       wrap has nothing to give itself away with. */
+    @keyframes lit1 { 0%, 9.52% { opacity: 1; } 11.52%, 86.10% { opacity: 0; } 88.10%, 100% { opacity: 1; } }
+    @keyframes lit2 { 0%, 14.67% { opacity: 0; } 16.67%, 26.19% { opacity: 1; } 28.19%, 100% { opacity: 0; } }
+    @keyframes lit3 { 0%, 31.33% { opacity: 0; } 33.33%, 42.86% { opacity: 1; } 44.86%, 100% { opacity: 0; } }
+    @keyframes lit4 { 0%, 48.00% { opacity: 0; } 50.00%, 59.52% { opacity: 1; } 61.52%, 100% { opacity: 0; } }
+
+    /* Every row lights on an arrival — the card reaching a box, not leaving one
+       — so the board always names where the task is rather than where it has
+       just been. Todo at the project, In progress at the machine, Ready for
+       review at the pull request, Ready for test back at you.
+
+       That makes them a handoff chain: each row dims exactly as the next
+       brightens, so from the first arrival to the last there is always one row
+       lit and never two. The crossfades are centred on the arrival itself,
+       1.25% either side of it, rather than starting there and lagging behind.
+
+       Ready for test is dark again by 100, so the loop opens on a board where
+       nothing has happened yet; every row is at 0.3 at both ends of the cycle. */
+    @keyframes todo   { 0%, 15.42% { opacity: 0.3; } 17.92%, 32.08% { opacity: 1; } 34.58%, 100% { opacity: 0.3; } }
+    @keyframes doing  { 0%, 32.08% { opacity: 0.3; } 34.58%, 48.75% { opacity: 1; } 51.25%, 100% { opacity: 0.3; } }
+    @keyframes review { 0%, 48.75% { opacity: 0.3; } 51.25%, 86.85% { opacity: 1; } 89.35%, 100% { opacity: 0.3; } }
+    @keyframes test   { 0%, 86.85% { opacity: 0.3; } 89.35%, 97.62% { opacity: 1; } 100% { opacity: 0.3; } }
+
+    /*
+      Stopped, the diagram still has to read as a diagram. So the cards park
+      mid-hop rather than vanishing, every box is unlit rather than one being
+      lit at an arbitrary moment, and all three status rows are legible.
+    */
+    @media (prefers-reduced-motion: reduce) {
+      .tok { animation: none; opacity: 1; }
+      .tok1, .tok2, .tok3 { transform: translateX(40px); }
+      .tok4 { transform: translateX(-330px); }
+      .act { animation: none; opacity: 0; }
+      .st { animation: none; opacity: 1; }
+    }
+  </style>
+
+  <rect x="1" y="1" width="878" height="310" rx="14" fill="#F7F6FC" stroke="#E4E0F4" stroke-width="2"/>
+
+  <text x="440" y="28" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas, monospace" font-size="13" fill="#8A83A0" letter-spacing="0.5">$ ramonda run</text>
+
+  <!-- connectors -->
+
+  <g stroke="#C9C2E6" stroke-width="2" fill="none">
+    <line x1="172" y1="125" x2="248" y2="125" marker-end="url(#arrow)"/>
+    <line x1="400" y1="125" x2="476" y2="125" marker-end="url(#arrow)"/>
+    <line x1="628" y1="125" x2="704" y2="125" marker-end="url(#arrow)"/>
+    <!-- The return: down out of the pull request, back along the bottom, up into you. -->
+    <path d="M 782 200 V 258 Q 782 272 768 272 H 112 Q 98 272 98 258 V 206" marker-end="url(#arrow)"/>
+  </g>
+
+  <g font-family="Montserrat, 'Trebuchet MS', 'Segoe UI', sans-serif" font-size="9" fill="#8A83A0" text-anchor="middle">
+    <text x="212" y="103">queued as</text>
+    <text x="212" y="114">Todo</text>
+    <text x="440" y="114">task claimed</text>
+    <!-- The four names the Stop hook's verdict passes through, in order, so the
+         longest label is the one over the hop that carries the most work. Stacked
+         upwards from the same 114 baseline the others end on, so every label sits
+         on the arrow rather than floating at its own height. -->
+    <text x="668" y="81">verify</text>
+    <text x="668" y="92">commit</text>
+    <text x="668" y="103">push</text>
+    <text x="668" y="114">create PR</text>
+    <text x="440" y="294" font-size="10.5">you review and merge</text>
+  </g>
+
+  <!-- boxes -->
+
+  <g fill="#FFFFFF" stroke="#DDD8F0" stroke-width="1.5">
+    <rect x="24" y="50" width="148" height="150" rx="12"/>
+    <rect x="252" y="50" width="148" height="150" rx="12"/>
+    <rect x="480" y="50" width="148" height="150" rx="12"/>
+    <rect x="708" y="50" width="148" height="150" rx="12"/>
+  </g>
+
+  <!-- The lit state of each box: a halo and a hard edge, both faded in together. -->
+  <g fill="none" stroke="#8B7BE8">
+    <g class="act act1">
+      <rect x="24" y="50" width="148" height="150" rx="12" stroke-width="6" opacity="0.18"/>
+      <rect x="24" y="50" width="148" height="150" rx="12" stroke-width="2"/>
+    </g>
+    <g class="act act2">
+      <rect x="252" y="50" width="148" height="150" rx="12" stroke-width="6" opacity="0.18"/>
+      <rect x="252" y="50" width="148" height="150" rx="12" stroke-width="2"/>
+    </g>
+    <g class="act act3">
+      <rect x="480" y="50" width="148" height="150" rx="12" stroke-width="6" opacity="0.18"/>
+      <rect x="480" y="50" width="148" height="150" rx="12" stroke-width="2"/>
+    </g>
+    <g class="act act4">
+      <rect x="708" y="50" width="148" height="150" rx="12" stroke-width="6" opacity="0.18"/>
+      <rect x="708" y="50" width="148" height="150" rx="12" stroke-width="2"/>
+    </g>
+  </g>
+
+  <g font-family="Montserrat, 'Trebuchet MS', 'Segoe UI', sans-serif" font-size="13" font-weight="700" fill="#2B2440" text-anchor="middle">
+    <text x="98" y="112">You</text>
+    <text x="326" y="112">Github Projects</text>
+    <text x="554" y="112">Your machine</text>
+    <text x="782" y="112">Pull requests</text>
+  </g>
+
+  <!-- icons -->
+  <g fill="none" stroke="#8B7BE8" stroke-width="2" stroke-linecap="round">
+    <!-- you -->
+    <circle cx="98" cy="71" r="6.5"/>
+    <path d="M 86.5 91 a 11.5 11.5 0 0 1 23 0"/>
+    <!-- a board of three columns -->
+    <rect x="311" y="65" width="30" height="26" rx="4"/>
+    <path d="M 321 65 V 91 M 331 65 V 91" stroke-width="1.5"/>
+    <!-- a laptop -->
+    <rect x="539" y="64" width="30" height="20" rx="3"/>
+    <path d="M 534 90 H 574" stroke-width="2.5"/>
+    <!-- a pull request: a branch merging back -->
+    <circle cx="771" cy="68" r="4"/>
+    <circle cx="771" cy="90" r="4"/>
+    <path d="M 771 72 V 86"/>
+    <circle cx="793" cy="68" r="4"/>
+    <path d="M 793 72 v 8 a 6 6 0 0 1 -6 6 h -8"/>
+    <path d="M 782 83 L 779 86 L 782 89" stroke-width="1.75"/>
+  </g>
+
+  <!-- you: write an issue. Centred in the content band rather than sitting at
+       the top of it, since it is the only thing in this box. -->
+  <text x="98" y="159" text-anchor="middle" font-family="Montserrat, 'Trebuchet MS', 'Segoe UI', sans-serif" font-size="11" fill="#6F6885">write an issue</text>
+
+  <!-- The project: the four status columns a task passes through, in board
+       order and in the colours setup-project gives them. Four of the eight the
+       board carries — the three ramonda drives itself, plus the one the merge
+       moves it to, which is yours rather than ramonda's. Spaced 18 rather than
+       20 apart so the four still sit centred in the box's content band. -->
+  <g font-family="Montserrat, 'Trebuchet MS', 'Segoe UI', sans-serif" font-size="10.5" fill="#6F6885">
+    <g class="st st1">
+      <circle cx="277" cy="128" r="4" fill="#3B82C4"/>
+      <text x="289" y="131.5">Todo</text>
+    </g>
+    <g class="st st2">
+      <circle cx="277" cy="146" r="4" fill="#E0A33B"/>
+      <text x="289" y="149.5">In progress</text>
+    </g>
+    <g class="st st3">
+      <circle cx="277" cy="164" r="4" fill="#8B7BE8"/>
+      <text x="289" y="167.5">Ready for review</text>
+    </g>
+    <g class="st st4">
+      <circle cx="277" cy="182" r="4" fill="#DD7B33"/>
+      <text x="289" y="185.5">Ready for test</text>
+    </g>
+  </g>
+
+  <!-- the machine: ramonda driving a session, in a worktree of its own -->
+  <line x1="554" y1="152" x2="554" y2="158" stroke="#C9C2E6" stroke-width="1.5"/>
+  <g font-family="ui-monospace, 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas, monospace" font-size="11" text-anchor="middle">
+    <rect x="498" y="130" width="112" height="22" rx="6" fill="#F3F0FE" stroke="#C9C2E6" stroke-width="1"/>
+    <text x="554" y="145" fill="#5B47C2">ramonda</text>
+    <rect x="498" y="158" width="112" height="22" rx="6" fill="#FEF6E7" stroke="#EBD9AE" stroke-width="1"/>
+    <text x="554" y="173" fill="#A9761A">Claude Code</text>
+  </g>
+
+  <!-- the pull request. Centred in the content band, as `you` is: both boxes
+       carry one line, and they sit at the two ends of the row. -->
+  <text x="782" y="159" text-anchor="middle" font-family="Montserrat, 'Trebuchet MS', 'Segoe UI', sans-serif" font-size="11" fill="#6F6885">one PR per task</text>
+
+  <!-- what travels -->
+
+  <g font-family="ui-monospace, 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle">
+    <g class="tok tok1">
+      <rect x="155" y="116" width="34" height="18" rx="6" fill="url(#task)"/>
+      <text x="172" y="128.5" fill="#FFFFFF">task</text>
+    </g>
+    <g class="tok tok2">
+      <rect x="383" y="116" width="34" height="18" rx="6" fill="url(#task)"/>
+      <text x="400" y="128.5" fill="#FFFFFF">task</text>
+    </g>
+    <g class="tok tok3">
+      <rect x="611" y="116" width="34" height="18" rx="6" fill="url(#task)"/>
+      <text x="628" y="128.5" fill="#FFFFFF">task</text>
+    </g>
+    <g class="tok tok4">
+      <rect x="754" y="263" width="32" height="18" rx="6" fill="url(#pr)"/>
+      <text x="770" y="275.5" fill="#FFFFFF">PR</text>
+    </g>
+  </g>
+</svg>

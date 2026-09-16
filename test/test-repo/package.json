@@ -1,0 +1,24 @@
+{
+  "name": "ramonda-tester",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maticluka999/ramonda-tester.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/maticluka999/ramonda-tester/issues"
+  },
+  "homepage": "https://github.com/maticluka999/ramonda-tester#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

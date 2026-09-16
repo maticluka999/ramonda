@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" width="560" height="200" role="img" aria-label="Ramonda CLI animated logo">
+  <defs>
+    <linearGradient id="petal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8B7BE8"/>
+      <stop offset="1" stop-color="#5B47C2"/>
+    </linearGradient>
+    <radialGradient id="core" cx="0.35" cy="0.3" r="1">
+      <stop offset="0" stop-color="#FFD066"/>
+      <stop offset="1" stop-color="#F0A92E"/>
+    </radialGradient>
+    <!-- typewriter reveal for the help line: a full-width mask slid in from the left -->
+    <clipPath id="type">
+      <rect class="type-mask" x="196" y="134" width="180" height="22"/>
+    </clipPath>
+  </defs>
+
+  <!--
+    The intro replays every 8 seconds. Every part runs one animation as long
+    as the whole cycle: it plays its move in the opening two seconds and holds
+    the finished frame for the rest, so the loop's restart is what replays it.
+
+    No part carries an `animation-delay`. A delay applies to the first iteration
+    only, so it staggers the intro and then leaves each part restarting at its
+    own offset — the flower re-blooming while the wordmark, half a second behind,
+    is still lit from the previous cycle and then blinks out. Staggering inside
+    the keyframes instead gives every part the same cycle boundary, and the whole
+    logo resets on one beat.
+
+    So each block below reads as `from-to` in percent, against the seconds it is
+    named after. To retime, change every `8s` and rescale: 1s = 12.5% of 8s.
+  -->
+  <style>
+    .p  { transform-origin: 0 0; animation: 8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite both; }
+    .p1 { animation-name: bloom1; }
+    .p2 { animation-name: bloom2; }
+    .p3 { animation-name: bloom3; }
+    .p4 { animation-name: bloom4; }
+    .p5 { animation-name: bloom5; }
+    .veins { animation: fadein 8s ease infinite both; }
+    .center { transform-origin: 0 0; animation: pop 8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite both; }
+    .wordmark { animation: rise 8s ease-out infinite both; }
+    .type-mask { animation: type 8s steps(16) infinite both; }
+    /* The cursor is not part of the intro: it blinks on its own clock, unseen
+       while the core it sits in is scaled away. */
+    .cursor { animation: blink 1.1s steps(1) 1.4s infinite; }
+
+    /* petals, 0.7s each, 0.08s apart */
+    @keyframes bloom1 { 0%       { transform: scale(0); }  8.75%, 100% { transform: scale(1); } }
+    @keyframes bloom2 { 0%, 1%   { transform: scale(0); }  9.75%, 100% { transform: scale(1); } }
+    @keyframes bloom3 { 0%, 2%   { transform: scale(0); } 10.75%, 100% { transform: scale(1); } }
+    @keyframes bloom4 { 0%, 3%   { transform: scale(0); } 11.75%, 100% { transform: scale(1); } }
+    @keyframes bloom5 { 0%, 4%   { transform: scale(0); } 12.75%, 100% { transform: scale(1); } }
+    /* core, 0.5s at 0.45s */
+    @keyframes pop { 0%, 5.625% { transform: scale(0); } 11.875%, 100% { transform: scale(1); } }
+    /* veins, 0.5s at 0.6s */
+    @keyframes fadein { 0%, 7.5% { opacity: 0; } 13.75%, 100% { opacity: 1; } }
+    /* wordmark, 0.45s at 0.7s */
+    @keyframes rise { 0%, 8.75% { opacity: 0; transform: translateY(10px); } 14.375%, 100% { opacity: 1; transform: translateY(0); } }
+    /* help line, typed in 16 steps over 0.9s at 1.1s */
+    @keyframes type { 0%, 13.75% { transform: translateX(-180px); } 25%, 100% { transform: translateX(0); } }
+    @keyframes blink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) {
+      .p, .veins, .center, .cursor, .wordmark { animation: none; }
+      .type-mask { animation: none; transform: translateX(0); }
+    }
+  </style>
+
+  <!-- Icon: ramonda flower with a terminal prompt at its center -->
+  <g transform="translate(100,100)">
+    <g>
+      <g transform="rotate(0)">
+        <path class="p p1" d="M0,-14 C 30,-22 37,-62 0,-84 C -37,-62 -30,-22 0,-14 Z" fill="url(#petal)" stroke="#4A38A8" stroke-width="1"/>
+      </g>
+      <g transform="rotate(72)">
+        <path class="p p2" d="M0,-14 C 30,-22 37,-62 0,-84 C -37,-62 -30,-22 0,-14 Z" fill="url(#petal)" stroke="#4A38A8" stroke-width="1"/>
+      </g>
+      <g transform="rotate(144)">
+        <path class="p p3" d="M0,-14 C 30,-22 37,-62 0,-84 C -37,-62 -30,-22 0,-14 Z" fill="url(#petal)" stroke="#4A38A8" stroke-width="1"/>
+      </g>
+      <g transform="rotate(216)">
+        <path class="p p4" d="M0,-14 C 30,-22 37,-62 0,-84 C -37,-62 -30,-22 0,-14 Z" fill="url(#petal)" stroke="#4A38A8" stroke-width="1"/>
+      </g>
+      <g transform="rotate(288)">
+        <path class="p p5" d="M0,-14 C 30,-22 37,-62 0,-84 C -37,-62 -30,-22 0,-14 Z" fill="url(#petal)" stroke="#4A38A8" stroke-width="1"/>
+      </g>
+    </g>
+    <g class="veins" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="2" stroke-linecap="round">
+      <line x1="0" y1="-26" x2="0" y2="-70"/>
+      <line x1="0" y1="-26" x2="0" y2="-70" transform="rotate(72)"/>
+      <line x1="0" y1="-26" x2="0" y2="-70" transform="rotate(144)"/>
+      <line x1="0" y1="-26" x2="0" y2="-70" transform="rotate(216)"/>
+      <line x1="0" y1="-26" x2="0" y2="-70" transform="rotate(288)"/>
+    </g>
+    <g class="center">
+      <circle r="26" fill="url(#core)"/>
+      <circle r="26" fill="none" stroke="#3A2E12" stroke-opacity="0.15" stroke-width="1.5"/>
+      <path d="M -10,-9 L 0,0 L -10,9" fill="none" stroke="#3A2A14" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line class="cursor" x1="5" y1="9" x2="14" y2="9" stroke="#3A2A14" stroke-width="4.5" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- Wordmark -->
+  <text class="wordmark" x="196" y="116" font-family="Montserrat, 'Trebuchet MS', 'Segoe UI', sans-serif" font-size="58" font-weight="700" letter-spacing="-0.5" fill="#2B2440">ramonda</text>
+  <g clip-path="url(#type)">
+    <text x="198" y="150" font-family="ui-monospace, 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas, monospace" font-size="16" fill="#8A83A0" letter-spacing="0.5">$ ramonda --help</text>
+  </g>
+</svg>

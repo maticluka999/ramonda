@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" width="560" height="200" role="img" aria-label="Ramonda CLI logo">
+  <defs>
+    <linearGradient id="petal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8B7BE8"/>
+      <stop offset="1" stop-color="#5B47C2"/>
+    </linearGradient>
+    <radialGradient id="core" cx="0.35" cy="0.3" r="1">
+      <stop offset="0" stop-color="#FFD066"/>
+      <stop offset="1" stop-color="#F0A92E"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Icon: ramonda flower with a terminal prompt at its center -->
+  <g transform="translate(100,100)">
+    <!-- petals, rotated in 72-degree steps; wide enough to nearly touch -->
+    <g>
+      <g transform="rotate(0)">
+        <path d="M0,-14 C 30,-22 37,-62 0,-84 C -37,-62 -30,-22 0,-14 Z" fill="url(#petal)" stroke="#4A38A8" stroke-width="1"/>
+      </g>
+      <g transform="rotate(72)">
+        <path d="M0,-14 C 30,-22 37,-62 0,-84 C -37,-62 -30,-22 0,-14 Z" fill="url(#petal)" stroke="#4A38A8" stroke-width="1"/>
+      </g>
+      <g transform="rotate(144)">
+        <path d="M0,-14 C 30,-22 37,-62 0,-84 C -37,-62 -30,-22 0,-14 Z" fill="url(#petal)" stroke="#4A38A8" stroke-width="1"/>
+      </g>
+      <g transform="rotate(216)">
+        <path d="M0,-14 C 30,-22 37,-62 0,-84 C -37,-62 -30,-22 0,-14 Z" fill="url(#petal)" stroke="#4A38A8" stroke-width="1"/>
+      </g>
+      <g transform="rotate(288)">
+        <path d="M0,-14 C 30,-22 37,-62 0,-84 C -37,-62 -30,-22 0,-14 Z" fill="url(#petal)" stroke="#4A38A8" stroke-width="1"/>
+      </g>
+    </g>
+    <!-- subtle veins on the petals -->
+    <g stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="2" stroke-linecap="round">
+      <line x1="0" y1="-26" x2="0" y2="-70"/>
+      <line x1="0" y1="-26" x2="0" y2="-70" transform="rotate(72)"/>
+      <line x1="0" y1="-26" x2="0" y2="-70" transform="rotate(144)"/>
+      <line x1="0" y1="-26" x2="0" y2="-70" transform="rotate(216)"/>
+      <line x1="0" y1="-26" x2="0" y2="-70" transform="rotate(288)"/>
+    </g>
+    <!-- flower center = terminal prompt -->
+    <circle r="26" fill="url(#core)"/>
+    <circle r="26" fill="none" stroke="#3A2E12" stroke-opacity="0.15" stroke-width="1.5"/>
+    <path d="M -10,-9 L 0,0 L -10,9" fill="none" stroke="#3A2A14" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="5" y1="9" x2="14" y2="9" stroke="#3A2A14" stroke-width="4.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="196" y="116" font-family="Montserrat, 'Trebuchet MS', 'Segoe UI', sans-serif" font-size="58" font-weight="700" letter-spacing="-0.5" fill="#2B2440">ramonda</text>
+  <text x="198" y="150" font-family="ui-monospace, 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas, monospace" font-size="16" fill="#8A83A0" letter-spacing="0.5">$ ramonda --help</text>
+</svg>

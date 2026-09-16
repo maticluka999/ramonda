@@ -1,0 +1,17 @@
+# Build output — formatting generated files only makes diffs noisier.
+dist/
+
+# Terminal logo art, emitted by scripts/render-logo.mjs. The rows are escape
+# sequences on one long line each; wrapping them would corrupt the art.
+src/banner/logo.ts
+
+# The lockfile is rewritten by npm on every dependency change. It is generated;
+# leave it as npm writes it rather than risk `format:check` disagreeing with the
+# installer over a file no one reads by hand.
+package-lock.json
+
+# The e2e fixture is a seed copied verbatim into a throwaway repo — an ordinary
+# user's repo rather than ramonda's own source, generated lockfile included.
+# Formatting it under ramonda's config would restyle the very files the sessions
+# are handed, and the e2e asserts patterns against index.js on the PR branch.
+test/test-repo/
